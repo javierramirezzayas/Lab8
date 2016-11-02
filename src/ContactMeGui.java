@@ -14,7 +14,7 @@ public class ContactMeGui extends JFrame
 
 	private JLabel emailL, passwordL,reEnterPassL, messageL;
 	private JTextField emailTF, messageTF;
-	private JTextField passwordTF,reEnterPassTF;
+	private JTextField passwordTF,reEnterPassTF; 
 	private JButton sendB, exitB, clearB;
 
 	private SendButtonHandler sbHandler;
@@ -24,20 +24,44 @@ public class ContactMeGui extends JFrame
 	private JMenu make;
 	private JMenuItem byEmail;
 	private JMenuItem byFax;
+	
+	// Added
+	private JLabel nameL; 
+	private JTextField nameTF;
+	private JMenuItem byCellPhone;
+	private JMenuItem byRegularMail;
+	private JRadioButton maleB, femaleB;
+	ButtonGroup theGroup = new ButtonGroup();
+	private ClearButtonHandler clHandler;
+	// Added
 
 	public ContactMeGui()
 	{
+		nameL = new JLabel("Full Name: ", SwingConstants.CENTER); // Added
 		emailL = new JLabel("Email: ", SwingConstants.CENTER);
 		passwordL = new JLabel("Password: ", SwingConstants.CENTER);
 		reEnterPassL= new JLabel("Re-enter Password: ", SwingConstants.CENTER);
 		messageL = new JLabel("Addtional Info: ", SwingConstants.CENTER);
 
+		nameTF = new JTextField(); // Added
 		emailTF = new JTextField();
-		passwordTF = new JTextField();
-		reEnterPassTF = new JTextField();
+		// Changed Variables from JTextField to JPasswordField Type 
+		// Note: left the initialized variables as JTextField in order to be able to manipulate the in the SetButtonhandler Method
+		passwordTF = new JPasswordField();
+		reEnterPassTF = new JPasswordField();
+		// Changed
 		messageTF = new JTextField();
+		
+		// Added
+		maleB = new JRadioButton("Male", false);
+		femaleB = new JRadioButton("Female", false);
+		
+		// Group the Radio Buttons
+		theGroup.add(maleB);
+		theGroup.add(femaleB);
+		// Added
 
-		//SPecify handlers for each button and add (register) ActionListeners to each button.
+		//Specify handlers for each button and add (register) ActionListeners to each button.
 		sendB = new JButton("Send");
 		sbHandler = new SendButtonHandler();
 		sendB.addActionListener(sbHandler);
@@ -47,21 +71,31 @@ public class ContactMeGui extends JFrame
 		exitB.addActionListener(ebHandler);
 
 		clearB = new JButton("Clear");
+		// Added
+		clHandler = new ClearButtonHandler();
+		clearB.addActionListener(clHandler);
+		// Added
 
 
 		menuBar = new JMenuBar();
 		make = new JMenu("            Contact Me                 ");
 		byEmail = new JMenuItem("by Email");
 		byFax = new JMenuItem("by Fax");
+		byCellPhone = new JMenuItem("by CellPhone");
+		byRegularMail = new JMenuItem("by Regular Mail");
 		menuBar.add(make);
 		make.add(byEmail);
 		make.add(byFax);
+		make.add(byCellPhone);
+		make.add(byRegularMail);
 
 		setTitle("Registration Form");
 		Container pane = getContentPane();
-		pane.setLayout(new GridLayout(6, 3));
+		pane.setLayout(new GridLayout(8, 3));
 
 		//Add things to the pane in the order you want them to appear (left to right, top to bottom)
+		pane.add(nameL); // Added
+		pane.add(nameTF);
 		pane.add(emailL);
 		pane.add(emailTF);
 		pane.add(passwordL);
@@ -71,6 +105,9 @@ public class ContactMeGui extends JFrame
 		pane.add(messageL);
 		pane.add(messageTF);
 
+		pane.add(maleB);
+		pane.add(femaleB);
+		
 		pane.add(menuBar);
 
 		pane.add(clearB);
@@ -91,6 +128,9 @@ public class ContactMeGui extends JFrame
 			String inputPassword= passwordTF.getText();
 			String reinputPassword= reEnterPassTF.getText();
 			String inputMessage= messageTF.getText();
+			
+			System.out.println("inputPassword: "+inputPassword);
+			System.out.println("reinputPassword: "+reinputPassword);
 
 
 			if(inputEmail.equals("") || inputPassword.equals("") || reinputPassword.equals("")){
@@ -100,6 +140,17 @@ public class ContactMeGui extends JFrame
 						"Wrong input. Rememeber to fill all the spaces",
 						"Something is missing!!!",
 						JOptionPane.WARNING_MESSAGE);
+			}
+			
+			//Added
+			// Missing @ in email
+			else if(inputEmail.indexOf('@') == -1){
+				JOptionPane.showMessageDialog(null,"Invalid Email Address.","Wrong input", JOptionPane.WARNING_MESSAGE);
+			}
+			
+			// Input Password and ReInput Password are not the same
+			else if(!(inputPassword.equals(reinputPassword))){
+				JOptionPane.showMessageDialog(null,"Password Mismatch.","Wrong input", JOptionPane.WARNING_MESSAGE);
 			}
 
 			//the password is too long
@@ -122,6 +173,22 @@ public class ContactMeGui extends JFrame
 
 			//massageTF.setText("" + area);
 		}
+	}
+	
+	private class ClearButtonHandler implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			nameTF.setText("");
+			emailTF.setText("");
+			passwordTF.setText("");
+			reEnterPassTF.setText("");
+			messageTF.setText("");
+			theGroup.clearSelection();
+		}
+		
 	}
 
 	public class ExitButtonHandler implements ActionListener
