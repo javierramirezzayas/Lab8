@@ -177,7 +177,6 @@ public class ContactMeGui extends JFrame
 	
 	private class ClearButtonHandler implements ActionListener
 	{
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
@@ -188,7 +187,6 @@ public class ContactMeGui extends JFrame
 			messageTF.setText("");
 			theGroup.clearSelection();
 		}
-		
 	}
 
 	public class ExitButtonHandler implements ActionListener
